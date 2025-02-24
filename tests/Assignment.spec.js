@@ -1,5 +1,6 @@
 const { test, expect } = require ('@playwright/test')
-//create function to get a random email to make the test be run multiple times
+
+// create a function to generate a random email for running the test multiple times
 function getRandomEmail() {
     return `user${Date.now()}@gmail.com`; }
 test('Lunch application', async ({ page }) => {
@@ -7,6 +8,8 @@ test('Lunch application', async ({ page }) => {
   await page.click('button:has-text("Sign Up")');
   const randomEmail = getRandomEmail();
   await page.waitForSelector('#loading-spinner', { state: 'hidden' });
+
+  // sign up with a new user
   await page.getByPlaceholder('First Name').fill('Lando');
   await page.getByPlaceholder('Last Name').fill('Norris');
   await page.getByPlaceholder('email').fill(randomEmail);
@@ -14,11 +17,11 @@ test('Lunch application', async ({ page }) => {
   await page.waitForTimeout(1000);
   await page.click('button:has-text("Submit")');
   await page.waitForSelector('#loading-spinner', { state: 'hidden' });
+
+  // add a new contact
   await page.click('button:has-text("Add a New Contact")');
   await page.getByLabel('First Name').fill('Fernando');
   await page.getByLabel('Last Name').fill('Alonso');
-  //enter invalid date of birth
-  await page.getByLabel('Date of Birth').fill('04/05/1986');
   await page.getByLabel('Email').fill('testser@gmail.com');
   await page.getByLabel('Phone').fill('6856453256');
   await page.getByLabel('Street Address 1').fill('address1');
@@ -27,6 +30,9 @@ test('Lunch application', async ({ page }) => {
   await page.getByLabel('State or Province').fill('Epirus');
   await page.getByLabel('Postal Code').fill('45500');
   await page.getByLabel('Country').fill('Greece');
+
+  //enter invalid date of birth
+  await page.getByLabel('Date of Birth').fill('04/05/1986');
   await page.click('button:has-text("Submit")');
   // validate the error
   await expect(page.locator('text=Contact validation failed: birthdate: Birthdate is invalid')).toBeVisible();
@@ -43,8 +49,9 @@ test('Lunch application', async ({ page }) => {
   });
   
   await page.locator('text=Delete Contact').click({ force: true });
-  //Check if the contact hase been deleted
+  //Check if the contact has been deleted
   await expect(page.locator('text=Fernando Alonso')).not.toBeVisible();
+  // Log out
   await page.click('button:has-text("Logout")');
 
 
