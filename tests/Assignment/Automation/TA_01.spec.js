@@ -1,3 +1,5 @@
+//test score: Sign up with a new user, add a new contact validate it on contact details page and delete the existing contact.
+
 const { test, expect } = require ('@playwright/test')
 
 // create a function to generate a random email for running the test multiple times
@@ -31,7 +33,7 @@ test('Lunch application', async ({ page }) => {
   await page.getByLabel('Postal Code').fill('45500');
   await page.getByLabel('Country').fill('Greece');
 
-  //enter invalid date of birth
+  // enter invalid date of birth
   await page.getByLabel('Date of Birth').fill('04/05/1986');
   await page.click('button:has-text("Submit")');
   // validate the error
@@ -39,7 +41,7 @@ test('Lunch application', async ({ page }) => {
   // enter correct date of birth
   await page.getByLabel('Date of Birth').fill('1986-09-04');
   await page.click('button:has-text("Submit")');
-  //check is there is a contact with the name I inserted above
+  // check if there is a contact with the name I inserted above
   await expect(page.locator('text=Fernando Alonso')).toBeVisible();
   await page.locator('text=Fernando Alonso').click();
   await page.waitForTimeout(200);
@@ -47,11 +49,11 @@ test('Lunch application', async ({ page }) => {
     console.log(`Dialog message: ${dialog.message()}`);
     await dialog.accept();
   });
-  
+  // delete the contact
   await page.locator('text=Delete Contact').click({ force: true });
-  //Check if the contact has been deleted
+  // check if the contact has been deleted
   await expect(page.locator('text=Fernando Alonso')).not.toBeVisible();
-  // Log out
+  // log out
   await page.click('button:has-text("Logout")');
 
 
