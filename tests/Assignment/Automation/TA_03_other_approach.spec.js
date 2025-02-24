@@ -18,6 +18,7 @@ async function signUp(page, email) {
     await page.getByPlaceholder('Last Name').fill('Norris');
     await page.getByPlaceholder('email').fill(email);
     await page.getByPlaceholder('Password').fill('secretkey123');
+    await page.waitForTimeout(500);
     await page.click('button:has-text("Submit")');
    // await page.waitForSelector('#loading-spinner', { state: 'hidden' });
 }
@@ -40,10 +41,12 @@ async function addContact(page) {
 // Function to validate incorrect and correct birthdate
 async function validateBirthdate(page) {
     await page.getByLabel('Date of Birth').fill('04/05/1986');
+    await page.waitForTimeout(500);
     await page.click('button:has-text("Submit")');
     await expect(page.locator('text=Contact validation failed: birthdate: Birthdate is invalid')).toBeVisible();
     
     await page.getByLabel('Date of Birth').fill('1986-09-04');
+    await page.waitForTimeout(400);
     await page.click('button:has-text("Submit")');
     await expect(page.locator('text=Fernando Alonso')).toBeVisible();
 }
@@ -70,9 +73,7 @@ async function logout(page) {
 test('Launch application and perform user actions', async ({ page }) => {
     await page.goto('https://thinking-tester-contact-list.herokuapp.com/');
     const randomEmail = getRandomEmail();
-    await page.waitForTimeout(1000);
     await signUp(page, randomEmail);
-    await page.waitForTimeout(1000);
     await addContact(page);
     await validateBirthdate(page);
     await deleteContact(page);

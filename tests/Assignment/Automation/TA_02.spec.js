@@ -26,6 +26,7 @@ test('Lunch application', async ({ page }) => {
   await page.getByLabel('Country').fill('Greece');
   // enter invalid date of birth
   await page.getByLabel('Date of Birth').fill('04/05/1986');
+  await page.waitForTimeout(1000);
   await page.click('button:has-text("Submit")');
   // validate the error
   await expect(page.locator('text=Contact validation failed: birthdate: Birthdate is invalid')).toBeVisible();
